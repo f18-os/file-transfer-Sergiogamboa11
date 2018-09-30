@@ -1,20 +1,21 @@
 #! /usr/bin/env python3
 
 # Echo client program
-import socket, sys, re
+import socket, sys, re, os
 sys.path.append("../lib")       # for params
 import params
 
 switchesVarDefaults = (
-    (('-s', '--server'), 'server', "127.0.0.1:50001"),
-    (('-?', '--usage'), "usage", False), # boolean (set if present)
+    (('-s', '--server'), 'server', "127.0.0.1:50003"),
+    (('-?', '--usage'), "usage", False),
+    (('-f', '--file'), 'file', " ")# boolean (set if present)
     )
 
 
 progname = "framedClient"
 paramMap = params.parseParams(switchesVarDefaults)
 
-server, usage  = paramMap["server"], paramMap["usage"]
+server, usage, file = paramMap["server"], paramMap["usage"], paramMap["file"]
 
 if usage:
     params.usage()
@@ -51,6 +52,13 @@ if s is None:
     sys.exit(1)
 
 outMessage = "Hello world!"
+
+if os.path.exists(file) and file!=" ":
+    inFile = file
+    f = open(inFile, "r")
+    outMessage = f.read();
+else:
+    outMessage = "File not found"
 
 print("sending '%s'" % outMessage)
 s.send(outMessage.encode())
