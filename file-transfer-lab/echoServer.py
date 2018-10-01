@@ -7,11 +7,9 @@ sys.path.append("../lib")       # for params
 import params
 
 switchesVarDefaults = (
-    (('-l', '--listenPort') ,'listenPort', 50003),
+    (('-l', '--listenPort') ,'listenPort', 50000),
     (('-?', '--usage'), "usage", False), # boolean (set if present)
     )
-
-
 
 progname = "echoserver"
 paramMap = params.parseParams(switchesVarDefaults)
@@ -34,7 +32,7 @@ s.listen(1)              # allow only one outstanding request
 conn, addr = s.accept()  # wait until incoming connection request (and accept it)
 print('Connected by', addr)
 while 1:
-    data = conn.recv(1024).decode()
+    data = conn.recv(100).decode()
     if not data: break
     sendMsg = "Echoing %s" % data
     print("Received '%s', sending '%s'" % (data, sendMsg))

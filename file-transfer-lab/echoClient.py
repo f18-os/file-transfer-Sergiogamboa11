@@ -6,9 +6,9 @@ sys.path.append("../lib")       # for params
 import params
 
 switchesVarDefaults = (
-    (('-s', '--server'), 'server', "127.0.0.1:50003"),
+    (('-s', '--server'), 'server', "127.0.0.1:50000"),
     (('-?', '--usage'), "usage", False),
-    (('-f', '--file'), 'file', " ")# boolean (set if present)
+    (('-p', '--put'), 'file', " ")# boolean (set if present)
     )
 
 
@@ -60,11 +60,11 @@ if os.path.exists(file) and file!=" ":
 else:
     outMessage = "File not found"
 
-print("sending '%s'" % outMessage)
-s.send(outMessage.encode())
-
-data = s.recv(1024).decode()
-print("Received '%s'" % data)
+# print("sending '%s'" % outMessage)
+# s.send(outMessage.encode())
+#
+# data = s.recv(100).decode()
+# print("Received '%s'" % data)
 
 print("sending '%s'" % outMessage)
 s.send(outMessage.encode())
@@ -72,7 +72,7 @@ s.send(outMessage.encode())
 s.shutdown(socket.SHUT_WR)      # no more output
 
 while 1: #if data length is 0, close
-    data = s.recv(1024).decode()
+    data = s.recv(100).decode()
     print("Received '%s'" % data)
     if len(data) == 0:
         break
