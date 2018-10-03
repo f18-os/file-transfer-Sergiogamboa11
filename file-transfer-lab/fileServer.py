@@ -29,9 +29,8 @@ sock, addr = lsock.accept()
 
 print("connection rec'd from", addr)
 
-
-from framedSock import framedSend, framedReceive
-
+# Keeps checking if a Client wants to connect, and when a client
+# connects, it forks the process to let other clients connect
 while True:
     sock, addr = lsock.accept()
 
