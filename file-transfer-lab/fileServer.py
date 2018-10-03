@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-import sys, os
+import sys, os, time
 sys.path.append("../lib")       # for params
 import re, socket, params
 
@@ -49,7 +49,6 @@ while True:
                     decodedPayload = payload.decode("utf-8")
                     fileName = decodedPayload.split('::')[0]
                     contents = decodedPayload.split('::')[1]
-
                     directory = os.getcwd() + "/serverFolder/"
                     filePath = directory + fileName
                     if not os.path.exists(directory):
@@ -64,5 +63,9 @@ while True:
             if not payload:
                 if debug: print("child exiting")
                 sys.exit(0)
-            payload += b"!"             # make emphatic!
-            framedSend(sock, payload, debug)
+            payload += b"!"
+            try:
+                framedSend(sock, payload, debug)
+            except socket.error:
+                print("Error: Lost connection to Client")
+        break

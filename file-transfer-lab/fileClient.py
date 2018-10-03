@@ -55,18 +55,28 @@ if s is None:
     print('could not open socket')
     sys.exit(1)
 
+
 # If the file that was input by the user exists, we open and read its contents
-# and encode them to send them to server
-if os.path.exists(file) and file!=" ":
-    inFile = file
-    f = open(inFile, "r")
-    outMessage = inFile + "::" + f.read();
+# and encode them to send them to server. If the file exists but it its size is 0,
+# we don't send it to the server
+if os.path.exists(file) and file!=" " and os.path.getsize(file) == 0:
+    print("Error: File size is 0")
+    exit()
+elif os.path.exists(file) and file!=" ":
+    f = open(file, "r")
+    outMessage = file + "::" + f.read();
     outMessage = outMessage.replace("\n", "\\n")
 else:
-    outMessage = "File not found"
+    print("Error: File not found")
+    exit()
 outMessageB = bytes(outMessage, encoding= 'utf-8')
-
 print("sending " + outMessage)
-framedSend(s, outMessageB, debug)
-inMessage = bytes(framedReceive(s, debug).decode("utf-8").replace("\\n", "\n"), encoding= 'utf-8')
-print("received:", inMessage)
+try:
+    framedSend(s, outMessageB, debug)
+    inMessage = bytes(framedReceive(s, debug).decode("utf-8").replace("\\n", "\n"), encoding= 'utf-8')
+    print("received:", inMessage)
+except socket.error:
+    print("Error: Lost connection to Server")
+
+
+
