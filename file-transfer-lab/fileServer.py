@@ -33,26 +33,37 @@ print("connection rec'd from", addr)
 from framedSock import framedSend, framedReceive
 
 while True:
-    payload = framedReceive(sock, debug)
+    sock, addr = lsock.accept()
 
-    if payload:
-        if "::" in payload.decode("utf-8"):
-            decodedPayload = payload.decode("utf-8")
-            fileName = decodedPayload.split('::')[0]
-            contents = decodedPayload.split('::')[1]
+    from framedSock import framedSend, framedReceive
+    if not os.fork():
+        print("new child process handling connection from", addr)
+        while True:
+            payload = framedReceive(sock, debug)
 
-            directory = os.getcwd() + "/serverFolder/"
-            filePath = directory + fileName
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-            if not os.path.isfile(filePath):
-                f = open(filePath, "w")
-                f.write(contents)
-            else:
-                payload = b"File already exists"
+            # if there's still data in the payload, we decode the message and check
+            # if the message is supposed to be saved into a file. If the file already
+            # exists in the directory, we don't replace it. If the directory doesn't exist
+            # we make a new one to store our Server files
+            if payload:
+                if "::" in payload.decode("utf-8"):
+                    decodedPayload = payload.decode("utf-8")
+                    fileName = decodedPayload.split('::')[0]
+                    contents = decodedPayload.split('::')[1]
 
-    if debug: print("rec'd: ", payload)
-    if not payload:
-        break
-    payload += b"!"             # make emphatic!
-    framedSend(sock, payload, debug)
+                    directory = os.getcwd() + "/serverFolder/"
+                    filePath = directory + fileName
+                    if not os.path.exists(directory):
+                        os.makedirs(directory)
+                    if not os.path.isfile(filePath):
+                        f = open(filePath, "w")
+                        f.write(contents)
+                    else:
+                        payload = b"File already exists"
+
+            if debug: print("rec'd: ", payload)
+            if not payload:
+                if debug: print("child exiting")
+                sys.exit(0)
+            payload += b"!"             # make emphatic!
+            framedSend(sock, payload, debug)

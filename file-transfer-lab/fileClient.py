@@ -55,6 +55,8 @@ if s is None:
     print('could not open socket')
     sys.exit(1)
 
+# If the file that was input by the user exists, we open and read its contents
+# and encode them to send them to server
 if os.path.exists(file) and file!=" ":
     inFile = file
     f = open(inFile, "r")
