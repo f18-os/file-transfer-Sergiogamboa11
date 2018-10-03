@@ -58,7 +58,7 @@ if s is None:
 if os.path.exists(file) and file!=" ":
     inFile = file
     f = open(inFile, "r")
-    outMessage = f.read();
+    outMessage = inFile + "::" + f.read();
     outMessage = outMessage.replace("\n", "\\n")
 else:
     outMessage = "File not found"
