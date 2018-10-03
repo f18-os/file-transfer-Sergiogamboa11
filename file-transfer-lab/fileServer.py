@@ -40,9 +40,13 @@ while True:
             decodedPayload = payload.decode("utf-8")
             fileName = decodedPayload.split('::')[0]
             contents = decodedPayload.split('::')[1]
-            file = os.getcwd() + "/serverFolder/" + fileName
-            if not os.path.isfile(file):
-                f = open(file, "w")
+
+            directory = os.getcwd() + "/serverFolder/"
+            filePath = directory + fileName
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            if not os.path.isfile(filePath):
+                f = open(filePath, "w")
                 f.write(contents)
             else:
                 payload = b"File already exists"
