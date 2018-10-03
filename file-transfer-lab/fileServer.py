@@ -41,8 +41,11 @@ while True:
             fileName = decodedPayload.split('::')[0]
             contents = decodedPayload.split('::')[1]
             file = os.getcwd() + "/serverFolder/" + fileName
-            f = open(file, "w")
-            f.write(contents)
+            if not os.path.isfile(file):
+                f = open(file, "w")
+                f.write(contents)
+            else:
+                payload = b"File already exists"
 
     if debug: print("rec'd: ", payload)
     if not payload:
