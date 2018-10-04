@@ -20,4 +20,4 @@ original file does not exist, has a size of 0, or already exists in the server i
 ## Final Note
 Everything that I had done so far worked perfectly until I implemented forking into my server. After I added
 forking, the server started to act inconsistently and failed to return any data to the client at times. I
-have been unable to figure out what the problem is, but it seems to work whenever it feels like it.
+have been unable to figure out what the problem is, but it does seem to work sometimes.
